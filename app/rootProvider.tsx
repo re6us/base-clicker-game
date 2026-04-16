@@ -2,26 +2,23 @@
 import { ReactNode, useState } from "react";
 import { base } from "wagmi/chains";
 import { createConfig, http, WagmiProvider } from "wagmi";
+import { coinbaseWallet } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
-import { MiniAppProvider } from "./providers/MiniAppProvider";
 
 const config = createConfig({
   chains: [base],
   transports: { [base.id]: http() },
-  connectors: [farcasterMiniApp()],
+  connectors: [coinbaseWallet({ appName: "Base Clicker" })],
 });
 
 export function RootProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <MiniAppProvider>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </WagmiProvider>
-    </MiniAppProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

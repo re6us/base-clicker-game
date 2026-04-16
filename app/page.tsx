@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useMiniApp } from "./providers/MiniAppProvider";
+import { useAccount } from "wagmi";
 import styles from "./page.module.css";
 
 const UPGRADES = [
@@ -30,7 +30,7 @@ function loadState(): GameState {
 }
 
 export default function Home() {
-  const { context } = useMiniApp();
+  const { address } = useAccount();
   const [coins, setCoins] = useState(0);
   const [totalClicks, setTotalClicks] = useState(0);
   const [owned, setOwned] = useState<Record<string, number>>({ miner: 0, factory: 0, robot: 0 });
@@ -90,7 +90,7 @@ export default function Home() {
     <div className={styles.container}>
       <div className={styles.header}>
         <p className={styles.greeting}>
-          {context?.user?.displayName ? `Hey ${context.user.displayName}` : "Base Clicker"}
+          {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Base Clicker"}
         </p>
         <div className={styles.coinCount}>{displayCoins.toLocaleString()}</div>
         <div className={styles.cps}>
